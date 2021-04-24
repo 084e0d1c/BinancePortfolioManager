@@ -6,28 +6,7 @@
     <div class="container-fluid" style="margin-top: 25px">
       <h3 class="display-10" style="color: black">Current holdings</h3>
       <div class="row justify-content-center">
-        <div class="col-sm-6" id="header">
-          <b-table :items="assets" class="mt-2" outlined head-variant="dark">
-          </b-table>
-        </div>
-        <div class="col-sm-6" id="header">
-          <pieChart
-            type="pie3d"
-            width="600"
-            height="600"
-            dataFormat="json"
-            :dataSource="pieChartData"
-          >
-          </pieChart>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid" style="margin-top: 25px">
-      <h3 class="display-10" style="color: black">
-        Historical Profit and Loss
-      </h3>
-      <div class="row justify-content-center">
-        <div class="col-sm-7" id="header">
+        <div class="col-sm-12" id="header">
           <timeSeriesChart
             type="timeseries"
             width="100%"
@@ -37,9 +16,41 @@
           >
           </timeSeriesChart>
         </div>
-        <div class="col-sm-5" id="header">
-          <b-table :items="assets" class="mt-2" outlined head-variant="dark">
-          </b-table>
+      </div>
+    </div>
+    <div class="container-fluid" style="margin-top: 25px">
+      <h3 class="display-10" style="color: black">
+        Historical Profit and Loss
+      </h3>
+      <div class="row justify-content-center">
+        <div class="col-sm-6" id="header">
+          <pnlChart
+            type="stackedcolumn2d"
+            width="100%"
+            height="600"
+            dataFormat="json"
+            :dataSource="pnlChartData"
+          >
+          </pnlChart>
+        </div>
+        <div class="col-sm-6" id="header">
+          <pieChart
+            type="pie3d"
+            width="100%"
+            height="600"
+            dataFormat="json"
+            :dataSource="pieChartData"
+          >
+          </pieChart>
+        </div>
+      </div>
+      <div class="container-fluid" style="margin-top: 25px">
+        <h3 class="display-10" style="color: black">Current holdings</h3>
+        <div class="row justify-content-center">
+          <div class="col-sm-12" id="header">
+            <b-table :items="assets" class="mt-2" outlined head-variant="dark">
+            </b-table>
+          </div>
         </div>
       </div>
     </div>
@@ -64,6 +75,8 @@ import TimeSeries from "fusioncharts/fusioncharts.timeseries";
 
 const pieChart = VueFusionChartsComponent(FusionCharts, Charts, FusionTheme);
 
+const pnlChart = VueFusionChartsComponent(FusionCharts, Charts, FusionTheme);
+
 const timeSeriesChart = VueFusionChartsComponent(
   FusionCharts,
   Charts,
@@ -72,6 +85,7 @@ const timeSeriesChart = VueFusionChartsComponent(
 );
 
 Vue.component("pieChart", pieChart);
+Vue.component("pnlChart", pnlChart);
 Vue.component("timeSeriesChart", timeSeriesChart);
 
 export default {
@@ -752,6 +766,55 @@ export default {
           },
         ],
       },
+      pnlChartData: {
+        chart: {
+          caption: "Profit & Loss",
+          subcaption: "Isolated by Individual Coins",
+          numbersuffix: "$",
+          showsum: "1",
+          plottooltext: "$label $seriesName <b>$dataValue</b>",
+          theme: "fusion",
+        },
+        categories: [
+          {
+            category: [
+              { label: "BTCUSDT" },
+              { label: "ETHUSDT" },
+              { label: "BNBUSDT" },
+              { label: "ZILUSDT" },
+              { label: "ALGOUSDT" },
+              { label: "DOTUSDT" },
+              { label: "EGLDUSDT" },
+            ],
+          },
+        ],
+        dataset: [
+          {
+            seriesname: "Realised Profit",
+            data: [
+              { value: "7.177224383999996" },
+              { value: "59.88804642220021" },
+              { value: "0" },
+              { value: "0" },
+              { value: "0" },
+              { value: "0" },
+              { value: "0" },
+            ],
+          },
+          {
+            seriesname: "Unrealised Profit",
+            data: [
+              { value: "-41.943363809999994" },
+              { value: "173.20401850000007" },
+              { value: "124.6145416" },
+              { value: "-27.705656999999974" },
+              { value: "-24.836606000000018" },
+              { value: "-70.832055" },
+              { value: "-126.40336099999999" },
+            ],
+          },
+        ],
+      },
     };
   },
   components: {
@@ -761,9 +824,9 @@ export default {
   },
   methods: {
     // Convert unix timestamp to date time format !!! Credit: @esd_mentino project
-    timeConverter: function (UNIX_timestamp) {
+    timeConverter: function(UNIX_timestamp) {
       var a = new Date(UNIX_timestamp * 1000);
-      Date.prototype.removeHours = function (hours) {
+      Date.prototype.removeHours = function(hours) {
         this.setTime(this.getTime() - hours * 60 * 60 * 1000);
         return this;
       };
@@ -801,12 +864,10 @@ export default {
       return time;
     },
     computeWeights() {
-      axios
-        .post(COMPUTE_WEIGHTS, { data: this.assets })
-        .then((res) => {
-          (this.pieChartData.data = res.data.plotting_data),
-            (this.computed_assets = res.data.data);
-        });
+      axios.post(COMPUTE_WEIGHTS, { data: this.assets }).then((res) => {
+        (this.pieChartData.data = res.data.plotting_data),
+          (this.computed_assets = res.data.data);
+      });
     },
 
     computeHistoricalPosition() {
@@ -817,8 +878,9 @@ export default {
         .then((res) => {
           // Endpoint returns time in unix form, need to convert back for Fusioncharts to parse
           var clean_data = [];
-          res.data.data.forEach(item => clean_data.push([this.timeConverter(item[0]),item[1],item[2]]));
-          console.log(clean_data);
+          res.data.data.forEach((item) =>
+            clean_data.push([this.timeConverter(item[0]), item[1], item[2]])
+          );
           const fusionTable = new FusionCharts.DataStore().createDataTable(
             clean_data,
             this.timeSeriesSchema
