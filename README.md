@@ -9,12 +9,14 @@ End May - v1.0.0 (Beta) version of the website
 
 End June - v1.0.0 (Live) move from beta to live
 
+Track the progress via this [Kanban Board](https://github.com/brandontjd/BinancePortfolioManager/projects/1)
+
 ## Proposed Architecture
 <ol>
-  <li>The service will be hosted on AWS Elastic Beanstalk.</li>
+  <li>The service will be hosted on GitHub</li>
   <li>Frontend: Written in Vue.JS</li>
-  <li>Backend: Flask to create REST APIs deployed on Lambda</li>
-  <li>No database will be used, as we will not store user information. Upon accessing the website, everything will load.</li>
+  <li>Backend: Python REST APIs deployed on Lambda</li>
+  <li>No database will be used, as we will not store user information. Upon accessing the website, python-binance API will pull all required data.</li>
   <li>Users are to generate Binance API Keys (with trading function switched off) and for the website. </li>
 </ol>
 
