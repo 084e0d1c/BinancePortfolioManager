@@ -9,6 +9,8 @@ End May - v1.0.0 (Beta) version of the website
 
 End June - v1.0.0 (Live) move from beta to live
 
+Track the progress via this [Kanban Board](https://github.com/brandontjd/BinancePortfolioManager/projects/1)
+
 ## Proposed Architecture
 <ol>
   <li>The service will be hosted on GitHub</li>
