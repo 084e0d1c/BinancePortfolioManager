@@ -14,12 +14,20 @@ provider:
   lambdaHashingVersion: 20201221
 
 functions:
-  compute_weights:
-    handler: handler.compute_weights
+  ComputeWeights:
+    handler: compute_weights.compute_weights
     timeout: 15
     events:
       - http:
           path: /compute_weights
+          method: post
+          cors: true
+  GetHistoricalPositions:
+    handler: compute_historical_positions.compute_position
+    timeout: 15
+    events:
+      - http:
+          path: /compute_position
           method: post
           cors: true
 
@@ -28,7 +36,7 @@ custom:
     dockerizePip: non-linux
 
 plugins:
-  # - serverless-offline
+  - serverless-offline
   - serverless-python-requirements
   - serverless-api-gateway-throttling
 

@@ -1,9 +1,6 @@
 import json
 import pandas as pd
 
-# Test Case: python-lambda-local -f compute_weights -t 5 handler.py test.json
-# https://www.serverless.com/blog/serverless-python-packaging
-
 def compute_weights(event, context):
 
     assets = json.loads(event['body'])
