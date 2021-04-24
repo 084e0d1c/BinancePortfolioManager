@@ -1,6 +1,6 @@
 org: brandutan
-app: compute-weights-app
-service: compute-weights
+app: binance-portfolio-manager
+service: bpm-backend
 
 frameworkVersion: "2"
 
