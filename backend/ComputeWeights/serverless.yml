@@ -1,0 +1,21 @@
+org: brandutan
+app: compute-weights-app
+service: compute-weights
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+functions:
+  compute_weights:
+    handler: handler.compute_weights
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
