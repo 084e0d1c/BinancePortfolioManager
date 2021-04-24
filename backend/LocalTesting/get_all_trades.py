@@ -80,6 +80,7 @@ def get_all_trades():
                     order_copy['symbol'] = reverse_coin + "USDT"
                     order_copy['executedQty'] = float(order_copy['price']) * float(order_copy['executedQty'])
                     order_copy['side'] = "SELL"
+                    order_copy['type'] = "REVERSE" # This is for computing coin profit and loss
                     reverse_order.append(order_copy)
     
         if orders:
