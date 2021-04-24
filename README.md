@@ -5,11 +5,19 @@
 Bianance application does not provide an easy way for users to track the P&L of their portfolio. This is especially evident when you move holdings from SPOT to EARN. The BPM (Binance Portfolio Manager) website seeks to provide a solution for this, giving users an easy way to monitor their holdings and track P&L. Additional functionalities such as portfolio optimization will be included along the way.
 
 ## Release Schedule
-End May - v1.0.0 (Beta) version of the website
 
-End June - v1.0.0 (Live) move from beta to live
+1. End May - v1.0.0 (Beta) version of the website
+2. End June - v1.0.0 (Live) move from beta to live
+
+### Current Progress
 
 Track the progress via this [Kanban Board](https://github.com/brandontjd/BinancePortfolioManager/projects/1)
+
+#### Sample Charts
+
+![alt text](./images/preview_1.png)
+
+![alt text](./images/preview_2.png)
 
 ## Proposed Architecture
 <ol>
