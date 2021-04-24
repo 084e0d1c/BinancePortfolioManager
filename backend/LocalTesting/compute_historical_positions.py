@@ -3,7 +3,6 @@ from flask_cors import CORS
 from os import environ
 import pandas as pd
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 import numpy as np
 from time import mktime
 
@@ -45,7 +44,7 @@ def compute_position():
     order_df['side'] = np.where(order_df['side']=="BUY",1,-1)
 
     order_df['executedQty'] = order_df['executedQty'] * order_df['side']
-    price_df = pd.read_csv('../DevFiles/Price.csv')
+    price_df = pd.read_csv('../../DevFiles/Price.csv')
     price_df = price_df[list(order_df['symbol'].unique())+['timestamp']]
     price_df['timestamp'] = pd.to_datetime(price_df['timestamp'])
     price_df = price_df[price_df['timestamp'] >= order_df['updateTime'].min()-timedelta(hours=4)]
@@ -65,7 +64,7 @@ def compute_position():
     nav_df = nav_df.fillna(0)
     nav_timeseries_data = []
     for t in nav_df.index:
-        unix_secs = mktime(t.timetuple())
+        unix_secs = int(mktime(t.timetuple()))
         for col in nav_df.columns:
             nav_timeseries_data.append([unix_secs,col,nav_df.loc[t,col]])
 

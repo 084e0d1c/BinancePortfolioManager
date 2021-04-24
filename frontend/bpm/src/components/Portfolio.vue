@@ -54,7 +54,7 @@ import { BTable } from "bootstrap-vue";
 import Vue from "vue";
 import VueFusionChartsComponent from "vue-fusioncharts/component";
 import axios from "axios";
-import { HOSTNAME } from "../config.js";
+import { COMPUTE_WEIGHTS, COMPUTE_HISTORICAL_POS } from "../config.js";
 
 // import FusionCharts modules and resolve dependency
 import FusionCharts from "fusioncharts";
@@ -760,9 +760,49 @@ export default {
     BTable,
   },
   methods: {
+    // Convert unix timestamp to date time format !!! Credit: @esd_mentino project
+    timeConverter: function (UNIX_timestamp) {
+      var a = new Date(UNIX_timestamp * 1000);
+      Date.prototype.removeHours = function (hours) {
+        this.setTime(this.getTime() - hours * 60 * 60 * 1000);
+        return this;
+      };
+      a = a.removeHours(8);
+      var months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var year = a.getFullYear();
+      var month = months[a.getMonth()];
+      var date = a.getDate();
+      var hour = "0" + a.getHours();
+      var min = "0" + a.getMinutes();
+      // var sec = a.getSeconds();
+      var time =
+        date +
+        " " +
+        month +
+        " " +
+        year +
+        " " +
+        hour.substr(-2) +
+        ":" +
+        min.substr(-2);
+      return time;
+    },
     computeWeights() {
       axios
-        .post(HOSTNAME + "5001/compute_weights", { data: this.assets })
+        .post(COMPUTE_WEIGHTS, { data: this.assets })
         .then((res) => {
           (this.pieChartData.data = res.data.plotting_data),
             (this.computed_assets = res.data.data);
@@ -771,16 +811,19 @@ export default {
 
     computeHistoricalPosition() {
       axios
-        .post(HOSTNAME + "5003/compute_historical_positions", {
+        .post(COMPUTE_HISTORICAL_POS, {
           data: this.order_history,
         })
         .then((res) => {
+          // Endpoint returns time in unix form, need to convert back for Fusioncharts to parse
+          var clean_data = [];
+          res.data.data.forEach(item => clean_data.push([this.timeConverter(item[0]),item[1],item[2]]));
+          console.log(clean_data);
           const fusionTable = new FusionCharts.DataStore().createDataTable(
-            res.data.data,
+            clean_data,
             this.timeSeriesSchema
           );
           this.timeSeriesData.data = fusionTable;
-          console.log(this.timeSeriesData.data);
         });
     },
   },
