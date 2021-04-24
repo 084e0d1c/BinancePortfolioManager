@@ -142,3 +142,9 @@ backend/.DS_Store
 
 # Node modules
 node_modules/
+
+# SLS Framework file
+.serverless/
+
+# Testing Files
+test.json
