@@ -20,12 +20,14 @@ Track the progress via this [Kanban Board](https://github.com/brandontjd/Binance
 ![alt text](./images/preview_2.png)
 
 ## Proposed Architecture
+![alt text](./images/architecture.png)
+
 <ol>
   <li>The service will be hosted on GitHub</li>
   <li>Frontend: Written in Vue.JS</li>
   <li>Backend: Python REST APIs deployed on Lambda</li>
-  <li>No database will be used, as we will not store user information. Upon accessing the website, python-binance API will pull all required data.</li>
-  <li>Hourly Lambda scheduled jobs will be ran to pull latest prices into s3 bucket for BPM to access, instead of relying on user API quota</li>
+  <li>No database will be used, as we will not store user information. With user API credentials, python-binance API will pull all required account data.</li>
+  <li>Hourly Lambda scheduled jobs will be ran to pull latest prices into s3 bucket for BPM to access, instead of relying on user API access.</li>
   <li>Users are to generate Binance API Keys (with trading function switched off) and for the website. </li>
 </ol>
 
