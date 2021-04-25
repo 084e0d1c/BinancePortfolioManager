@@ -8,12 +8,12 @@
     <div style="padding-top: 10px;">
       <ul>
         <li class="nav-item active">
-          <router-link to="/explore" :style="changePortfolio()"
+          <router-link to="/portfolio" :style="changePortfolio()"
             >Portfolio</router-link
           >
         </li>
         <li class="nav-item active">
-          <router-link to="/settings" :style="changeOptimise()"
+          <router-link to="/optimise" :style="changeOptimise()"
             >Optimisation</router-link
           >
         </li>
