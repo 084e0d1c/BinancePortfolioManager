@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import numpy as np
 from time import mktime
 
+# Need to patch this to call API to obtain prices
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
