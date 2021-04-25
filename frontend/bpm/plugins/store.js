@@ -12,6 +12,8 @@ export default new Vuex.Store({
       secret: "#",
     },
     assets: {},
+    order_history: [],
+    demo_status: false,
   },
   getters: {},
   mutations: {
@@ -19,8 +21,14 @@ export default new Vuex.Store({
       state.api_details.key = payload["API_KEY"];
       state.api_details.secret = payload["API_SECRET"];
     },
-    change_assets(state,payload){
-      state.assets = payload
+    change_assets(state, payload) {
+      state.assets = payload;
+    },
+    change_order_history(state, payload) {
+      state.order_history = payload;
+    },
+    change_demo_status(state,payload) {
+      state.demo_status = payload;
     }
   },
   actions: {},
