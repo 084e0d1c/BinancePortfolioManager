@@ -122,6 +122,7 @@ def get_all_trades():
         temp['Coin'] = coin
         temp['Quantity'] = assets[coin][0]
         temp['Price'] = assets[coin][1]
+        temp['Value'] = float(temp['Price']) * float(temp['Quantity'])
         frontend_formatted_assets.append(temp)
 
     return jsonify(
