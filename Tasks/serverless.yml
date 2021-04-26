@@ -1,0 +1,65 @@
+service: update-bpm-prices
+frameworkVersion: "2"
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: ap-southeast-1
+  memorySize: 2048
+  environment:
+    API_SECRET: ${env:API_SECRET}
+    API_KEY: ${env:API_KEY}
+    BUCKET: ${self:custom.bucketName}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}/*"
+
+resources:
+  Resources:
+    Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.bucketName}
+  # MyBucketPolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #       Bucket: !Ref Bucket
+  #       PolicyDocument:
+  #         Statement:
+  #           - Effect: Allow
+  #             Principal: '*' # public access to access the bucket files 
+  #             Action: s3:GetObject
+  #             Resource: 'arn:aws:s3:::${self:custom.bucketName}/*'
+
+functions:
+  UpdatePrices:
+    handler: update_prices.run_update
+    name: updatePrices
+#    For later on
+#    events:
+#      - httpApi:
+#          path: /users/create
+#          method: get
+#      - websocket: $connect
+#      - s3: ${env:BUCKET}
+#      - schedule: rate(10 minutes)
+
+# you can add CloudFormation resource templates here
+
+custom:
+  bucketName: ${self:service}-${self:provider.stage}-assets
+  pythonRequirements:
+    dockerizePip: non-linux
+
+plugins:
+  - serverless-python-requirements
+  - serverless-prune-plugin
+
+package:
+  patterns:
+    - "!node_modules/**"
