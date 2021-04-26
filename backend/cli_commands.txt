@@ -1,7 +1,7 @@
 # To setup serverless endpoint
 Ref: https://www.serverless.com/framework/docs/providers/aws/cli-reference/create/
 serverless create --template aws-python3
-npm install serverless-python-requirements serverless-offline serverless-api-gateway-throttling
+npm install serverless-python-requirements serverless-offline serverless-api-gateway-throttling serverless-prune-plugin
 serverless deploy
 
 # To test APIG and Lambda Locally
