@@ -1,4 +1,4 @@
-service: update-bpm-prices
+service: bpm-backend-data
 frameworkVersion: "2"
 useDotenv: true
 
@@ -13,11 +13,16 @@ provider:
     API_SECRET: ${env:API_SECRET}
     API_KEY: ${env:API_KEY}
     BUCKET: ${self:custom.bucketName}
+    COIN_FILE_NAMES: ${env:COIN_FILE_NAMES}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
         - "s3:*"
       Resource: "arn:aws:s3:::${self:custom.bucketName}/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}"
 
 resources:
   Resources:
@@ -37,9 +42,40 @@ resources:
   #             Resource: 'arn:aws:s3:::${self:custom.bucketName}/*'
 
 functions:
-  UpdatePrices:
-    handler: update_prices.run_update
-    name: updatePrices
+  UpdateCoins:
+    handler: update_coins.run_update
+    name: updateCoins
+    events: 
+      # - schedule: rate(1 hour)
+      - schedule: 
+          rate: cron(0 * * * ? *)
+          enabled: ${env:ENABLE_SCHEDULER, false}
+  UpdateUSDTPrices:
+    # spacing out all of the updates so that we don't hit the rate limit for the api
+    handler: update_usdt.run_update
+    name: updateUSDTPrices
+    memorySize: 4096
+    timeout: 900
+    events: 
+      - schedule: 
+          rate: cron(15 * * * ? *)
+          enabled: ${env:ENABLE_SCHEDULER, false}
+  # UpdateBTCPrices:
+  #   handler: update_btc.run_update
+  #   name: updateBTCPrices
+  #   events: 
+  #     - schedule: 
+          # rate: cron(30 * * * ? *)
+          # enabled: ${env:ENABLE_SCHEDULER}
+  # UpdateETHPrices:
+  #   handler: update_eth.run_update
+  #   name: updateETHPrices
+  #   events: 
+  #     - schedule: 
+          # rate: cron(45 * * * ? *)
+          # enabled: ${env:ENABLE_SCHEDULER}
+  
+
 #    For later on
 #    events:
 #      - httpApi:
@@ -49,14 +85,13 @@ functions:
 #      - s3: ${env:BUCKET}
 #      - schedule: rate(10 minutes)
 
-# you can add CloudFormation resource templates here
-
 custom:
   bucketName: ${self:service}-${self:provider.stage}-assets
   pythonRequirements:
     dockerizePip: non-linux
 
 plugins:
+  # - serverless-offline
   - serverless-python-requirements
   - serverless-prune-plugin
 
