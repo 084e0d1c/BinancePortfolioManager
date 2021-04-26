@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 from binance.client import Client
 import boto3
@@ -16,9 +15,12 @@ def run_update(event, context):
     API_SECRET = environ.get("API_SECRET")
 
     # Creating Dummy Data
-    dummy_csv = pd.DataFrame([API_KEY,API_SECRET])
-    file_name = "testing.csv"
-    dummy_csv.to_csv("/tmp/"+file_name,index=False,compression="gzip")
+    binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
+    all_tradable = binance_client.get_all_tickers()
+    df = pd.DataFrame(all_tradable)
+
+    file_name = environ.get('COIN_FILE_NAMES')
+    df.to_csv("/tmp/"+file_name, index=False, compression="gzip")
 
     # Upload File to s3
     path_to_file = f"/tmp/{file_name}"
@@ -26,7 +28,7 @@ def run_update(event, context):
     
     response = {
         "statusCode": 200,
-        "body": "Successfully created file"
+        "body": "Successfully update valid tickers"
     }
 
     return response
