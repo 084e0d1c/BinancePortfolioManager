@@ -8,8 +8,40 @@ Bianance application does not provide an easy way for users to track the P&L of 
 
 ## Release Schedule
 
-1. End May - v1.0.0 (Beta) version of the website
-2. End June - v1.0.0 (Live) move from beta to live
+<table>
+    <thead>
+        <tr>
+            <th>Expected Date</th>
+            <th>Release Build</th>
+            <th>Description</th>
+          <th>Functionalities</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>31 May 2021</td>
+            <td>Pre-Release</td>
+            <td>Closed group testing to gather UX feedback and identify bugs</td>
+            <td rowspan="3">Dashboard to view portfolio P&L efficiently</td>
+        </tr>
+        <tr>
+            <td>30 June 2021</td>
+            <td>Live Beta</td>
+            <td>Open usage by Binance Community and handle live workloads</td>
+        </tr>
+        <tr>
+            <td>31 July 2021</td>
+            <td>Live</td>
+            <td>Production Grade Portfolio Manager</td>
+        </tr>
+        <tr>
+            <td>31 Aug 2021</td>
+            <td>New Feature</td>
+            <td>Portfolio Optimisation Module</td>
+            <td>Optimise your crypto portfolios and leverage minimum variance strategies</td>
+        </tr>
+    </tbody>
+</table>
 
 ### Current Progress
 
