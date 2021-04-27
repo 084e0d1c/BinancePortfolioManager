@@ -76,11 +76,12 @@ import { BTable } from "bootstrap-vue";
 import Vue from "vue";
 import VueFusionChartsComponent from "vue-fusioncharts/component";
 import axios from "axios";
+import { USE_LAMBDA } from "../config.js";
 import {
   COMPUTE_WEIGHTS,
   COMPUTE_HISTORICAL_POS,
   COMPUTE_PNL,
-} from "../config.js";
+} from "../lambda_config.js";
 
 // import FusionCharts modules and resolve dependency
 import FusionCharts from "fusioncharts";
@@ -268,6 +269,41 @@ export default {
           this.timeSeriesData.data = fusionTable;
         });
     },
+    LambdaComputeWeights() {
+      axios.post(COMPUTE_WEIGHTS, this.assets).then((res) => {
+        (this.pieChartData.data = res.data.body.plotting_data),
+          (this.computed_assets = res.data.body.data);
+      });
+    },
+    LambdaComputePnl() {
+      var json_payload = {
+        API_KEY: this.api_key,
+        API_SECRET: this.api_secret,
+        order_history: this.order_history,
+      };
+      axios.post(COMPUTE_PNL, json_payload).then((res) => {
+        this.pnlChartData.categories[0].category = res.data.body.data.categories;
+        this.pnlChartData.dataset[0].data = res.data.body.data.real_pnl;
+        this.pnlChartData.dataset[1].data = res.data.body.data.ureal_pnl;
+        this.loading = false;
+      });
+    },
+    LambdaComputeHistoricalPosition() {
+      axios
+        .post(COMPUTE_HISTORICAL_POS, this.order_history)
+        .then((res) => {
+          // Endpoint returns time in unix form, need to convert back for Fusioncharts to parse
+          var clean_data = [];
+          res.data.body.data.forEach((item) =>
+            clean_data.push([this.timeConverter(item[0]), item[1], item[2]])
+          );
+          const fusionTable = new FusionCharts.DataStore().createDataTable(
+            clean_data,
+            this.timeSeriesSchema
+          );
+          this.timeSeriesData.data = fusionTable;
+        });
+    },
   },
   mounted() {
     this.loading = true;
@@ -275,9 +311,15 @@ export default {
     this.api_key = this.$store.state.api_details.key;
     this.assets = this.$store.state.assets;
     this.order_history = this.$store.state.order_history;
-    this.computeWeights();
-    this.computeHistoricalPosition();
-    this.computePnl();
+    if (USE_LAMBDA) {
+      this.computeWeights();
+      this.computeHistoricalPosition();
+      this.computePnl();
+    } else {
+      this.LambdaComputeWeights();
+      this.LambdaComputeHistoricalPosition();
+      this.LambdaComputePnl();
+    }
   },
 };
 </script>
