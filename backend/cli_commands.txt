@@ -2,7 +2,9 @@
 Ref: https://www.serverless.com/framework/docs/providers/aws/cli-reference/create/
 serverless create --template aws-python3
 npm install serverless-python-requirements serverless-offline serverless-api-gateway-throttling serverless-prune-plugin
-serverless deploy
+sls deploy
+sls deploy -f <function_name>
+sls prune -n <number of versions to keep>
 
 # To test APIG and Lambda Locally
 Ref: https://www.serverless.com/plugins/serverless-offline#installation
