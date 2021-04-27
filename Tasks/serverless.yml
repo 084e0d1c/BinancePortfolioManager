@@ -45,13 +45,11 @@ functions:
   UpdateCoins:
     handler: update_coins.run_update
     name: updateCoins
-    events: 
-      # - schedule: rate(1 hour)
+    events:
       - schedule: 
           rate: cron(0 * * * ? *)
           enabled: ${env:ENABLE_SCHEDULER, false}
   UpdateUSDTPrices:
-    # spacing out all of the updates so that we don't hit the rate limit for the api
     handler: update_usdt.run_update
     name: updateUSDTPrices
     memorySize: 4096
@@ -60,31 +58,26 @@ functions:
       - schedule: 
           rate: cron(15 * * * ? *)
           enabled: ${env:ENABLE_SCHEDULER, false}
-  # UpdateBTCPrices:
-  #   handler: update_btc.run_update
-  #   name: updateBTCPrices
-  #   events: 
-  #     - schedule: 
-          # rate: cron(30 * * * ? *)
-          # enabled: ${env:ENABLE_SCHEDULER}
-  # UpdateETHPrices:
-  #   handler: update_eth.run_update
-  #   name: updateETHPrices
-  #   events: 
-  #     - schedule: 
-          # rate: cron(45 * * * ? *)
-          # enabled: ${env:ENABLE_SCHEDULER}
+  UpdateBTCPrices:
+    handler: update_btc.run_update
+    name: UpdateBTCPrices
+    memorySize: 4096
+    timeout: 900
+    events: 
+      - schedule: 
+          rate: cron(30 * * * ? *)
+          enabled: ${env:ENABLE_SCHEDULER, false}
+  UpdateETHPrices:
+    # spacing out all of the updates so that we don't hit the rate limit for the api
+    handler: update_eth.run_update
+    name: UpdateETHPrices
+    memorySize: 4096
+    timeout: 900
+    events: 
+      - schedule: 
+          rate: cron(45 * * * ? *)
+          enabled: ${env:ENABLE_SCHEDULER, false}
   
-
-#    For later on
-#    events:
-#      - httpApi:
-#          path: /users/create
-#          method: get
-#      - websocket: $connect
-#      - s3: ${env:BUCKET}
-#      - schedule: rate(10 minutes)
-
 custom:
   bucketName: ${self:service}-${self:provider.stage}-assets
   pythonRequirements:

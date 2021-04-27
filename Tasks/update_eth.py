@@ -18,7 +18,7 @@ def run_update(event, context):
     # Process the valid tickers
     df = pd.read_csv(file["Body"], compression='gzip')
     list_of_coins = df['symbol'].unique()
-    usdt_pairs = [p for p in list_of_coins if 'USDT' in p]
+    eth_pairs = [p for p in list_of_coins if 'ETH' in p]
 
     # API_KEY , API_SECRET
     API_KEY = environ.get("API_KEY")
@@ -26,9 +26,9 @@ def run_update(event, context):
 
     # Creating Dummy Data
     binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
-    price_df = build_price_dataframe(usdt_pairs,binance_client)
+    price_df = build_price_dataframe(eth_pairs,binance_client)
 
-    file_name = "usdt_prices.csv"
+    file_name = "eth_prices.csv"
     price_df.to_csv("/tmp/"+file_name,index=False,compression="gzip")
 
     # Upload File to s3
@@ -38,7 +38,7 @@ def run_update(event, context):
     response = {
         "statusCode": 200,
         "body": json.dumps({
-            "msg":"Successfully update USDT pair prices"
+            "msg":"Successfully update ETH pair prices"
             })
     }
 
