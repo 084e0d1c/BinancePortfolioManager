@@ -1,5 +1,7 @@
 # BinancePortfolioManager
 
+![MIT License](https://img.shields.io/github/license/brandontjd/BinancePortfolioManager) ![Code Size](https://img.shields.io/github/languages/code-size/brandontjd/BinancePortfolioManager) ![Last Commit](https://img.shields.io/github/last-commit/brandontjd/BinancePortfolioManager) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
 ## Problem Statement & Solution
 
 Bianance application does not provide an easy way for users to track the P&L of their portfolio. This is especially evident when you move holdings from SPOT to EARN. The BPM (Binance Portfolio Manager) website seeks to provide a solution for this, giving users an easy way to monitor their holdings and track P&L. Additional functionalities such as portfolio optimization will be included along the way.
