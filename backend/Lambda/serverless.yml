@@ -1,8 +1,6 @@
-org: brandutan
-app: binance-portfolio-manager
-service: bpm-backend
-
+service: bpm-backend-microservices
 frameworkVersion: "2"
+useDotenv: true
 
 provider:
   name: aws
@@ -12,11 +10,28 @@ provider:
   memorySize: 2048
   logRetentionInDays: 30
   lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::${env:BUCKET}/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::${env:BUCKET}"
+  environment:
+    BUCKET: ${env:BUCKET}
+    COIN_FILE_NAMES: ${env:COIN_FILE_NAMES}
+    USDT_PRICE_FILE_NAME: ${env:USDT_PRICE_FILE_NAME}
+    ETH_PRICE_FILE_NAME: ${env:ETH_PRICE_FILE_NAME}
+    BTC_PRICE_FILE_NAME: ${env:BTC_PRICE_FILE_NAME}
 
 functions:
   ComputeWeights:
     handler: compute_weights.compute_weights
     timeout: 15
+    memorySize: 512
+    name: ComputeWeights
     events:
       - http:
           path: /compute_weights
@@ -24,19 +39,41 @@ functions:
           cors: true
   GetHistoricalPositions:
     handler: compute_historical_positions.compute_position
-    timeout: 15
-    events:
+    timeout: 900
+    memorySize: 3072
+    name: GetHistoricalPositions
+    events: 
       - http:
           path: /compute_position
           method: post
           cors: true
-
+  ComputePnL:
+    handler: compute_pnl.compute_pnl
+    timeout: 900
+    memorySize: 3072
+    name: ComputePnL
+    events:
+      - http:
+          path: /compute_pnl
+          method: post
+          cors: true
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
 custom:
   pythonRequirements:
     dockerizePip: non-linux
 
 plugins:
-  - serverless-offline
+  # - serverless-offline
   - serverless-python-requirements
   - serverless-api-gateway-throttling
   - serverless-prune-plugin
