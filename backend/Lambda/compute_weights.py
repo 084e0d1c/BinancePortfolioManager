@@ -3,7 +3,7 @@ import pandas as pd
 
 def compute_weights(event, context):
 
-    assets = json.loads(event['body'])
+    assets = json.loads(event['body'])['data']
     df = pd.DataFrame(assets)
     df = df.apply(pd.to_numeric,errors='ignore')
     df['Value'] = df['Quantity'] * df['Price']
@@ -19,7 +19,10 @@ def compute_weights(event, context):
 
     response = {
         "statusCode": "200",
-        "headers": {'Access-Control-Allow-Origin': "*"},
+        "headers": {
+            'Access-Control-Allow-Origin': "*",
+            'Access-Control-Allow-Credentials': True,
+            },
         "body": json.dumps({
             "data": df.to_dict(),
             "plotting_data":plotting_data
