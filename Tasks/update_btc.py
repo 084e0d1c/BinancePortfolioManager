@@ -4,7 +4,6 @@ import boto3
 from os import environ
 from utils import build_price_dataframe
 import json
-import gzip
 
 def run_update(event, context):
 
@@ -13,7 +12,7 @@ def run_update(event, context):
     file_name = environ.get("COIN_FILE_NAMES")
     client = boto3.client("s3")
     bucket = boto3.resource('s3').Bucket(bucket_name)
-    file = client.get_object(Bucket=bucket_name,Key=file_name)
+    file = client.get_object(Bucket=bucket_name, Key=file_name)
 
     # Process the valid tickers
     df = pd.read_csv(file["Body"], compression='gzip')
@@ -26,14 +25,14 @@ def run_update(event, context):
 
     # Creating Dummy Data
     binance_client = Client(api_key=API_KEY, api_secret=API_SECRET)
-    price_df = build_price_dataframe(btc_pairs,binance_client)
+    price_df = build_price_dataframe(btc_pairs, binance_client)
 
     file_name = "btc_prices.csv"
-    price_df.to_csv("/tmp/"+file_name,index=False,compression="gzip")
+    price_df.to_csv("/tmp/"+file_name,index=False, compression="gzip")
 
     # Upload File to s3
     path_to_file = f"/tmp/{file_name}"
-    bucket.upload_file(path_to_file,file_name)
+    bucket.upload_file(path_to_file, file_name)
     
     response = {
         "statusCode": 200,
