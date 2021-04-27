@@ -11,13 +11,4 @@ def build_price_dataframe(trading_pairs,binance_client):
         dataframes.append(data['{}_close'.format(pair)])
     master_df = pd.concat(dataframes, axis=1,ignore_index=False)
     master_df = master_df.astype(float)
-    df = master_df
-    df = df.pct_change()
-    df = df.iloc[1:]
-    df = df.astype(float)
-    df['year'] = pd.DatetimeIndex(df.reset_index()['timestamp']).year
-    df['month'] = pd.DatetimeIndex(df.reset_index()['timestamp']).month
-    df['timeperiod'] = df['year'].astype(str) + "_" + df['month'].astype(str)
-    df = df.drop(['year','month'],axis=1)
-    df.columns = [c.split('_')[0] for c in df.columns]
-    return df
+    return master_df
