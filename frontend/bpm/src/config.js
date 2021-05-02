@@ -1,6 +1,5 @@
 // DEV Switch
 export const DEV = true;
-export const USE_LAMBDA = true;
 
 // Local DEV Endpoints
 const HOSTNAME = "http://localhost:";
@@ -8,7 +7,19 @@ export const COMPUTE_WEIGHTS = HOSTNAME + "5001/compute_weights";
 export const COMPUTE_HISTORICAL_POS =
   HOSTNAME + "5003/compute_historical_positions";
 export const COMPUTE_PNL = HOSTNAME + "5004/compute_pnl";
-
+export const GET_TICKERS = HOSTNAME + "5005/get_tickers";
+export const TRADED_PAIRS = [
+  "ETHUSDT",
+  "ALGOUSDT",
+  "BTCUSDT",
+  "ZILUSDT",
+  "BNBUSDT",
+  "EGLDUSDT",
+  "DOTUSDT",
+  "NEARUSDT",
+  "ATOMUSDT",
+  "DOTBTC",
+];
 // Demo Datasets
 export const DEMO_ASSETS = [
   { Coin: "ALGO", Quantity: 256.46999999999997, Price: "1.25550000" },
