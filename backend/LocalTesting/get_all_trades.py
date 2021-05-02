@@ -94,6 +94,7 @@ def get_all_trades():
     order_history.extend(reverse_order)
     for order in reverse_order:
         ex_qty = float(order['executedQty'])
+        pair = order['symbol']
         clean_coin_name = clean_name(pair)
 
         if order['side'] == 'BUY':

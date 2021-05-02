@@ -105,7 +105,7 @@ def compute_pnl():
     for coin in coin_obj_dict:
         if coin_obj_dict[coin].cost_basis < 10:
             continue
-        unrealised_pnl = coin_obj_dict[coin].total_pnl(float(prices[coin]))
+        unrealised_pnl = coin_obj_dict[coin].get_unrealised_pnl(float(prices[coin]))
         realised_pnl = coin_obj_dict[coin].get_realised_pnl()
         category.append({
             "label":coin
@@ -116,6 +116,10 @@ def compute_pnl():
         real_pnl.append({
             "value":str(realised_pnl)
         })
+    total_pnl = sum(ureal_pnl) + sum(real_pnl)
+    total_pnl_arr = [ureal_pnl[i] + real_pnl[i] for i in range(len(ureal_pnl))]
+    most_profitable = category[total_pnl_arr.index(max(total_pnl_arr))]
+    least_profitable = category[total_pnl_arr.index(min(total_pnl_arr))]
     return jsonify(
         {
             "code":200,
@@ -123,6 +127,9 @@ def compute_pnl():
                 "categories": category,
                 "ureal_pnl":ureal_pnl,
                 "real_pnl":real_pnl,
+                "total_pnl":total_pnl,
+                "most_profitable":most_profitable,
+                "least_profitable":least_profitable
             }
         }
     ),200
