@@ -46,7 +46,6 @@ def get_reverse_trade_price(order,binance_client):
     return closest_price
 
 def compute_pnl(event, context):
-
     
     json_payload = json.loads(event['body'])
     order_history = json_payload['order_history']
@@ -82,10 +81,11 @@ def compute_pnl(event, context):
     category = []
     ureal_pnl = []
     real_pnl = []
+    total_pnl_arr = []
     for coin in coin_obj_dict:
-        if coin_obj_dict[coin].cost_basis < 10:
-            continue
-        unrealised_pnl = coin_obj_dict[coin].total_pnl(float(prices[coin]))
+        # if coin_obj_dict[coin].cost_basis < 10:
+        #     continue
+        unrealised_pnl = coin_obj_dict[coin].get_unrealised_pnl(float(prices[coin]))
         realised_pnl = coin_obj_dict[coin].get_realised_pnl()
         category.append({
             "label":coin
@@ -96,7 +96,10 @@ def compute_pnl(event, context):
         real_pnl.append({
             "value":str(realised_pnl)
         })
-
+        total_pnl_arr.append(unrealised_pnl+realised_pnl)
+    total_pnl = sum(total_pnl_arr)
+    most_profitable = category[total_pnl_arr.index(max(total_pnl_arr))]["label"]
+    least_profitable = category[total_pnl_arr.index(min(total_pnl_arr))]["label"]
     response = {
         "statusCode": "200",
         "headers": {
@@ -104,11 +107,12 @@ def compute_pnl(event, context):
             'Access-Control-Allow-Credentials': True,
             },
         "body": json.dumps({
-            "data":{
                 "categories": category,
                 "ureal_pnl":ureal_pnl,
                 "real_pnl":real_pnl,
-            }
+                "total_pnl":round(total_pnl,2),
+                "most_profitable":most_profitable,
+                "least_profitable":least_profitable
         })
     }
 
