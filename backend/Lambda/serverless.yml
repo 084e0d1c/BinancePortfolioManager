@@ -29,7 +29,7 @@ provider:
 functions:
   ComputeWeights:
     handler: compute_weights.compute_weights
-    timeout: 15
+    timeout: 30
     memorySize: 512
     name: ComputeWeights
     events:
@@ -39,17 +39,17 @@ functions:
           cors: true
   GetHistoricalPositions:
     handler: compute_historical_positions.compute_position
-    timeout: 900
+    timeout: 30
     memorySize: 3072
     name: GetHistoricalPositions
-    events: 
+    events:
       - http:
           path: /compute_position
           method: post
           cors: true
   ComputePnL:
     handler: compute_pnl.compute_pnl
-    timeout: 900
+    timeout: 30
     memorySize: 3072
     name: ComputePnL
     events:
@@ -57,17 +57,38 @@ functions:
           path: /compute_pnl
           method: post
           cors: true
+  GetAllTrades:
+    handler: get_all_trades.get_all_trades
+    timeout: 30
+    memorySize: 2048
+    name: GetAllTrades
+    events:
+      - http:
+          path: /get_all_trades
+          method: post
+          cors: true
+  GetTickers:
+    handler: get_valid_tickers.get_valid_tickers
+    timeout: 30
+    memorySize: 1024
+    name: GetTickers
+    events:
+      - http:
+          path: /get_valid_tickers
+          method: get
+          cors: true
+
 resources:
   Resources:
     GatewayResponseDefault4XX:
-      Type: 'AWS::ApiGateway::GatewayResponse'
+      Type: "AWS::ApiGateway::GatewayResponse"
       Properties:
         ResponseParameters:
           gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
           gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
         ResponseType: DEFAULT_4XX
         RestApiId:
-          Ref: 'ApiGatewayRestApi'
+          Ref: "ApiGatewayRestApi"
 custom:
   pythonRequirements:
     dockerizePip: non-linux
