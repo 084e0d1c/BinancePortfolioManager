@@ -16,7 +16,9 @@ def compute_weights(event, context):
             'label':coin,
             'value':data_dict['Weight'][coin]
         })
-
+    max_weight = df["Weight"].max()
+    coin_with_max_weight = df[df["Weight"] == max_weight].index[0]
+    portfolio_value = df['Value'].sum()
     response = {
         "statusCode": "200",
         "headers": {
@@ -25,7 +27,10 @@ def compute_weights(event, context):
             },
         "body": json.dumps({
             "data": df.to_dict(),
-            "plotting_data":plotting_data
+            "plotting_data":plotting_data,
+            "max_weight": max_weight,
+            "coin_with_max_weight": coin_with_max_weight,
+            "portfolio_value":round(portfolio_value,2)
         })
     }
 
