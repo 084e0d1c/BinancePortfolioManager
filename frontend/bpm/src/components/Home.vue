@@ -24,8 +24,6 @@
             :options="tickers"
             :multiple="true"
             :close-on-select="false"
-            label="name"
-            track-by="name"
             placeholder="Selected pairs traded"
           ></multiselect>
           <br />
@@ -88,8 +86,9 @@ import {
   DEV,
   DEMO_ASSETS,
   DEMO_ORDER_HISTORY,
-  GET_TICKERS,
+  TRADED_PAIRS,
 } from "../config.js";
+import { GET_ALL_TRADES, GET_TICKERS } from "../lambda_config.js";
 
 export default {
   name: "Home",
@@ -115,8 +114,9 @@ export default {
       this.order_history = DEMO_ORDER_HISTORY;
       this.api_secret = process.env.VUE_APP_API_SECRET;
       this.api_key = process.env.VUE_APP_API_KEY;
-      this.getTickers();
     }
+    this.getTickers();
+    this.userTraded = TRADED_PAIRS;
   },
   methods: {
     handleSubmit() {
@@ -127,9 +127,18 @@ export default {
         API_KEY: this.api_key,
         API_SECRET: this.api_secret,
       });
-      this.$store.commit("change_assets", this.assets);
-      this.$store.commit("change_order_history", this.order_history);
-      this.$router.push("/portfolio");
+      var json_payload = {
+        data: {
+          API_KEY: this.api_key,
+          API_SECRET: this.api_secret,
+          TRADED_PAIRS: this.userTraded,
+        },
+      };
+      axios.post(GET_ALL_TRADES, json_payload).then((res) => {
+        this.$store.commit("change_assets", res.data.assets);
+        this.$store.commit("change_order_history", res.data.order_history);
+        this.$router.push("/portfolio");
+      });
     },
     gotoDemo() {
       // To be updated later
@@ -143,7 +152,7 @@ export default {
     },
     getTickers() {
       axios.get(GET_TICKERS).then((res) => {
-        this.tickers = res.data.data;
+        this.tickers = res.data;
       });
     },
   },
