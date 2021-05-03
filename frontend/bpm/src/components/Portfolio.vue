@@ -111,7 +111,7 @@ import {
   COMPUTE_WEIGHTS,
   COMPUTE_HISTORICAL_POS,
   COMPUTE_PNL,
-} from "../lambda_config.js";
+} from "../config.js";
 
 // import FusionCharts modules and resolve dependency
 import FusionCharts from "fusioncharts";
@@ -286,6 +286,14 @@ export default {
         this.max_weight = res.data.max_weight;
         this.coin_with_max_weight = res.data.coin_with_max_weight;
         this.portfolio_value = res.data.portfolio_value;
+        var json_payload_to_vuex = {
+          pieChartData: this.pieChartData.data,
+          computed_assets: this.computed_assets,
+          max_weight: this.max_weight,
+          coin_with_max_weight: this.coin_with_max_weight,
+          portfolio_value: this.portfolio_value,
+        };
+        this.$store.commit("change_pie_chart_data", json_payload_to_vuex);
       });
     },
     computePnl() {
@@ -301,6 +309,16 @@ export default {
         this.most_profitable = res.data.most_profitable;
         this.least_profitable = res.data.least_profitable;
         this.total_pnl = res.data.total_pnl;
+        var json_payload_to_vuex = {
+          pnlChartDataCategories: this.pnlChartData.categories[0].category,
+          pnlChartDataDataSet1: this.pnlChartData.dataset[0].data,
+          pnlChartDataDataSet2: this.pnlChartData.dataset[1].data,
+          most_profitable: this.most_profitable,
+          least_profitable: this.least_profitable,
+          total_pnl: this.total_pnl,
+        };
+        this.$store.commit("change_pnl_data", json_payload_to_vuex);
+        this.$store.commit("change_portfolio_accessed_before", true);
         this.loading = false;
       });
     },
@@ -319,6 +337,7 @@ export default {
           this.timeSeriesSchema
         );
         this.timeSeriesData.data = fusionTable;
+        this.$store.commit("change_historical_position_data", fusionTable);
       });
     },
   },
@@ -328,9 +347,25 @@ export default {
     this.api_key = this.$store.state.api_details.key;
     this.assets = this.$store.state.assets;
     this.order_history = this.$store.state.order_history;
-    this.computeWeights();
-    this.computeHistoricalPosition();
-    this.computePnl();
+    if (this.$store.state.portfolio_accessed_before) {
+      this.pieChartData.data = this.$store.state.pieChartData;
+      this.computed_assets = this.$store.state.computed_assets;
+      this.max_weight = this.$store.state.max_weight;
+      this.coin_with_max_weight = this.$store.state.coin_with_max_weight;
+      this.portfolio_value = this.$store.state.portfolio_value;
+      this.pnlChartData.categories[0].category = this.$store.state.pnlChartDataCategories;
+      this.pnlChartData.dataset[0].data = this.$store.state.pnlChartDataDataSet1;
+      this.pnlChartData.dataset[1].data = this.$store.state.pnlChartDataDataSet2;
+      this.most_profitable = this.$store.state.most_profitable;
+      this.least_profitable = this.$store.state.least_profitable;
+      this.total_pnl = this.$store.state.total_pnl;
+      this.timeSeriesData.data = this.$store.state.fusionTable;
+      this.loading = false;
+    } else {
+      this.computeWeights();
+      this.computeHistoricalPosition();
+      this.computePnl();
+    }
   },
 };
 </script>

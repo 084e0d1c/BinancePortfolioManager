@@ -9,30 +9,56 @@
           </h1>
           <p class="lead" style="color: black">
             In no way or form is this website related to the official binance
-            platform. Please click
-            <a href="#" target="_blank">here</a> for more information.
+            platform. Please refer to this
+            <a
+              @click="$router.push({ name: 'tnc' })"
+              style="text-decoration: underline; color: black"
+              >link</a
+            >
+            for more information.
+          </p>
+          <p class="lead" style="color: black">
+            Don't have an account? Click
+            <a
+              @click="$router.push('/signup')"
+              style="text-decoration: underline; color: black"
+              >here</a
+            >
+          </p>
+          <p class="lead" style="color: black">
+            Updating traded pairs? Click
+            <a
+              @click="$router.push('/update')"
+              style="text-decoration: underline; color: black"
+              >here</a
+            >
           </p>
         </div>
       </div>
     </div>
-    <div class="container-fluid">
-      <div class="row justify-content-center">
-        <div class="col-sm-5">
-          <label>Select pairs that you have traded</label>
-          <multiselect
-            v-model="userTraded"
-            :options="tickers"
-            :multiple="true"
-            :close-on-select="false"
-            placeholder="Selected pairs traded"
-          ></multiselect>
-          <br />
-        </div>
-      </div>
-    </div>
+
     <div class="container-fluid">
       <div class="row justify-content-center" id="logIn">
         <div class="col-sm-5">
+          <div class="form-group">
+            <label>UID</label>
+            <input
+              type="text"
+              class="form-control"
+              v-model="uid"
+              placeholder="User ID"
+              v-on:change="getTradedPairs()"
+            />
+          </div>
+          <div v-if="uid">
+            <multiselect
+              v-model="userTraded"
+              :options="userTraded"
+              :multiple="true"
+              disabled="true"
+              placeholder="What you have previously selected"
+            ></multiselect>
+          </div>
           <div class="form-group">
             <label>API Secret </label>
             <input
@@ -65,13 +91,6 @@
             </button>
           </div>
         </div>
-        <div class="col-sm-2 mt-2">
-          <div class="text-center">
-            <button class="btn btn-dark btn-block" @click.prevent="gotoDemo()">
-              Demo
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -84,11 +103,10 @@ import Multiselect from "vue-multiselect";
 import "vue-loading-overlay/dist/vue-loading.css";
 import {
   DEV,
-  DEMO_ASSETS,
-  DEMO_ORDER_HISTORY,
+  GET_ALL_TRADES,
   TRADED_PAIRS,
+  CRUD_TRADED_PAIRS,
 } from "../config.js";
-import { GET_ALL_TRADES, GET_TICKERS } from "../lambda_config.js";
 
 export default {
   name: "Home",
@@ -104,14 +122,12 @@ export default {
       api_secret: "",
       assets: [],
       order_history: [],
-      tickers: [],
       userTraded: [],
+      uid: "",
     };
   },
   mounted() {
     if (this.dev) {
-      this.assets = DEMO_ASSETS;
-      this.order_history = DEMO_ORDER_HISTORY;
       this.api_secret = process.env.VUE_APP_API_SECRET;
       this.api_key = process.env.VUE_APP_API_KEY;
     }
@@ -140,19 +156,13 @@ export default {
         this.$router.push("/portfolio");
       });
     },
-    gotoDemo() {
-      // To be updated later
-      this.loading = true;
-      this.assets = this.$store.demo_assets;
-      this.order_history = this.$store.demo_order_history;
-      this.api_key = "";
-      this.api_secret = "";
-      this.$store.commit("change_demo_status", true);
-      this.handleSubmit();
-    },
-    getTickers() {
-      axios.get(GET_TICKERS).then((res) => {
-        this.tickers = res.data;
+    getTradedPairs() {
+      var json_payload = {
+        uid: this.uid,
+        action: "READ",
+      };
+      axios.post(CRUD_TRADED_PAIRS, json_payload).then((res) => {
+        this.userTraded = eval(res.data["Item"]["pairs"]);
       });
     },
   },

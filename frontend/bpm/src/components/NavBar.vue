@@ -27,8 +27,6 @@ export default {
   name: "NavBar",
   data() {
     return {
-      jwt: localStorage.token,
-      showLogout: "",
       portfolio_color: "color: black",
       optimise_color: "color: grey",
     };
@@ -39,6 +37,7 @@ export default {
       var currentUrl = window.location.pathname;
       if (currentUrl == "/portfolio") {
         this.portfolio_color = "color: black";
+        this.optimise_color = "color: grey";
       }
       return this.portfolio_color;
     },
@@ -46,6 +45,7 @@ export default {
       var currentUrl = window.location.pathname;
       if (currentUrl == "/optimise") {
         this.optimise_color = "color: black";
+        this.portfolio_color = "color: grey";
       }
       return this.optimise_color;
     },
