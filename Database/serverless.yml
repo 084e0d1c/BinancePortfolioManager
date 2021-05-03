@@ -1,0 +1,61 @@
+service: user-traded-pairs-db
+frameworkVersion: "2"
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+  logRetentionInDays: 30
+  stage: dev
+  region: ap-southeast-1
+  memorySize: 512
+  environment:
+    TABLE_NAME: ${env:TABLE_NAME}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "dynamodb:*"
+      Resource:
+        Fn::GetAtt:
+          - usersTable
+          - Arn
+
+resources: # CloudFormation template syntax from here on.
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:TABLE_NAME}
+        AttributeDefinitions:
+          - AttributeName: uid
+            AttributeType: S
+        KeySchema:
+          - AttributeName: uid
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    GatewayResponseDefault4XX:
+      Type: "AWS::ApiGateway::GatewayResponse"
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: "ApiGatewayRestApi"
+
+functions:
+  UpdateUserPairs:
+    handler: handler.crud
+    name: UpdateUserPairs
+    events:
+      - http:
+          path: /userpairs
+          method: post
+          cors: true
+
+package:
+  patterns:
+    - "!node_modules/**"
