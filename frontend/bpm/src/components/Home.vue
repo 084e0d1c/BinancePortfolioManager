@@ -9,13 +9,13 @@
           </h1>
           <p class="lead" style="color: black">
             In no way or form is this website related to the official binance
-            platform. Please refer to this
+            platform. Please read this
             <a
-              @click="$router.push({ name: 'tnc' })"
+              @click="$router.push('/about')"
               style="text-decoration: underline; color: black"
               >link</a
             >
-            for more information.
+            before proceeding to use the site.
           </p>
           <p class="lead" style="color: black">
             Don't have an account? Click

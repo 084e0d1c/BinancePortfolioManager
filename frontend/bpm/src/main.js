@@ -9,6 +9,7 @@ import Optimise from "./components/Optimise.vue";
 import Home from "./components/Home.vue";
 import Signup from "./components/Signup.vue";
 import Update from "./components/Update.vue";
+import About from "./components/About.vue";
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
@@ -21,6 +22,7 @@ const router = new VueRouter({
     { path: "/portfolio", name: "Portfolio", component: Portfolio },
     { path: "/optimise", name: "Optimise", component: Optimise },
     { path: "/update", name: "Update", component: Update },
+    { path: "/about", name: "About", component: About },
   ],
 });
 
