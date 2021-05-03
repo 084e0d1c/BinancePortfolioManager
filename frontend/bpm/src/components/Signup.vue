@@ -51,7 +51,8 @@
 
           <div v-if="!uid"></div>
           <div v-else class="alert alert-danger" role="alert">
-            Remember to take down your UID
+            Remember to take down your UID, as you will not be able to obtain it
+            again
           </div>
           <div class="text-center">
             <button
