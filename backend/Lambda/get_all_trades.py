@@ -6,7 +6,8 @@ import boto3
 import json
 import pandas as pd
 
-def get_all_trades(event,context):
+
+def get_all_trades(event, context):
 
     # Retrive traded pairs from events
     json_payload = json.loads(event['body'])['data']
@@ -14,7 +15,8 @@ def get_all_trades(event,context):
     binance_api_secret = json_payload['API_SECRET']
     traded_pairs = json_payload['TRADED_PAIRS']
 
-    binance_client = Client(api_key=binance_api_key, api_secret=binance_api_secret)
+    binance_client = Client(api_key=binance_api_key,
+                            api_secret=binance_api_secret)
 
     # Get latest prices of each coin from s3 bucket
     bucket_name = environ.get("BUCKET")
@@ -26,12 +28,12 @@ def get_all_trades(event,context):
 
     # Step 1: Get quantities of the coins
     order_history = []
-    reverse_order = [] # Suppose you trade DOTBNB , create a reverse order for BNB to "sell"
+    reverse_order = []  # Suppose you trade DOTBNB , create a reverse order for BNB to "sell"
     qty_dict = {}
     qty_dict['BTC'] = 0
     qty_dict['ETH'] = 0
 
-    for idx,pair in enumerate(traded_pairs):
+    for idx, pair in enumerate(traded_pairs):
         if idx == 200:
             sleep(30)
         orders = binance_client.get_all_orders(symbol=pair)
@@ -59,11 +61,13 @@ def get_all_trades(event,context):
                     order_copy['time'] += 1
                     order_copy['updateTime'] += 1
                     order_copy['symbol'] = reverse_coin + "USDT"
-                    order_copy['executedQty'] = float(order_copy['price']) * float(order_copy['executedQty'])
+                    order_copy['executedQty'] = float(
+                        order_copy['price']) * float(order_copy['executedQty'])
                     order_copy['side'] = "SELL"
-                    order_copy['type'] = "REVERSE" # This is for computing coin profit and loss
+                    # This is for computing coin profit and loss
+                    order_copy['type'] = "REVERSE"
                     reverse_order.append(order_copy)
-    
+
         if orders:
             clean_coin_name = clean_name(pair)
             if clean_coin_name in qty_dict:
@@ -91,12 +95,12 @@ def get_all_trades(event,context):
     # Step 3: Construct assets dictionary
     assets = {}
     for k in qty_dict:
-        assets[k] = [qty_dict[k],price_dict[k]]
+        assets[k] = [qty_dict[k], price_dict[k]]
 
-    # Step 4: Get any USDT position 
+    # Step 4: Get any USDT position
     usdt_obj = binance_client.get_asset_balance("USDT")
     usdt_position = float(usdt_obj['free']) + float(usdt_obj['locked'])
-    assets["USDT"] = [usdt_position,1]
+    assets["USDT"] = [usdt_position, 1]
 
     frontend_formatted_assets = []
     for coin in assets:
@@ -113,11 +117,11 @@ def get_all_trades(event,context):
         "headers": {
             'Access-Control-Allow-Origin': "*",
             'Access-Control-Allow-Credentials': True,
-            },
+        },
         "body": json.dumps({
-                "assets": frontend_formatted_assets,
-                "order_history":order_history,
-            
+            "assets": frontend_formatted_assets,
+            "order_history": order_history,
+
         })
     }
 

@@ -5,6 +5,7 @@ from os import environ
 from utils import build_price_dataframe
 import json
 
+
 def run_update(event, context):
 
     # Getting valid tickers from S3 Bucket
@@ -28,17 +29,17 @@ def run_update(event, context):
     price_df = build_price_dataframe(btc_pairs, binance_client)
 
     file_name = "btc_prices.csv"
-    price_df.to_csv("/tmp/"+file_name,index=False, compression="gzip")
+    price_df.to_csv("/tmp/"+file_name, index=False, compression="gzip")
 
     # Upload File to s3
     path_to_file = f"/tmp/{file_name}"
     bucket.upload_file(path_to_file, file_name)
-    
+
     response = {
         "statusCode": 200,
         "body": json.dumps({
-            "msg":"Successfully update BTC pair prices",
-            })
+            "msg": "Successfully update BTC pair prices",
+        })
     }
 
     return response

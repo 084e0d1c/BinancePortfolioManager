@@ -2,6 +2,7 @@ import json
 import boto3
 from os import environ
 
+
 def crud(event, context):
 
     # Load Dynamo Table
@@ -26,14 +27,14 @@ def crud(event, context):
         }
         table_resp = table.put_item(Item=item)
     else:
-        table_resp = table.get_item(Key={'uid':uid})
+        table_resp = table.get_item(Key={'uid': uid})
 
     response = {
         "statusCode": 200,
         "headers": {
             'Access-Control-Allow-Origin': "*",
             'Access-Control-Allow-Credentials': True,
-            },
+        },
         "body": json.dumps(table_resp)
     }
 

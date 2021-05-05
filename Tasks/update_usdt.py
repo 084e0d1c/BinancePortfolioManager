@@ -5,6 +5,7 @@ from os import environ
 from utils import build_price_dataframe
 import json
 
+
 def run_update(event, context):
 
     # Getting valid tickers from S3 Bucket
@@ -34,12 +35,12 @@ def run_update(event, context):
     # Upload File to s3
     path_to_file = f"/tmp/{file_name}"
     bucket.upload_file(path_to_file, file_name)
-    
+
     response = {
         "statusCode": 200,
         "body": json.dumps({
-            "msg":"Successfully update USDT pair prices"
-            })
+            "msg": "Successfully update USDT pair prices"
+        })
     }
 
     return response

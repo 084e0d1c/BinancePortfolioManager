@@ -3,6 +3,7 @@ from binance.client import Client
 import boto3
 from os import environ
 
+
 def run_update(event, context):
 
     # Getting S3 Bucket File Location
@@ -24,8 +25,8 @@ def run_update(event, context):
 
     # Upload File to s3
     path_to_file = f"/tmp/{file_name}"
-    bucket.upload_file(path_to_file,file_name)
-    
+    bucket.upload_file(path_to_file, file_name)
+
     response = {
         "statusCode": 200,
         "body": "Successfully update valid tickers"
