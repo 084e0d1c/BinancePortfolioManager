@@ -30,7 +30,6 @@
             Your trade history is constructed using your API credentials. Once
             you leave the site, everything is removed.
           </p>
-          <br />
           <h2>Quality of data</h2>
           <p>
             Price data is retrieved from Binance and stored on AWS cloud. Prices
@@ -44,7 +43,6 @@
             staking rewards. Hence, I have made some assumptions when building
             this page.
           </p>
-          <br />
           <h2>Assumptions</h2>
           <ol>
             <li>
@@ -56,7 +54,7 @@
               wallet.
               <b
                 >If they are in flexible or locked savings/staking, it will not
-                be reflected.</b
+                be reflected</b
               >
             </li>
             <li>
@@ -69,7 +67,6 @@
               provided by Binance. It works fine)
             </li>
           </ol>
-          <br />
           <h2>How to obtain API Key and Secret</h2>
           <p>
             Refer to
@@ -81,13 +78,29 @@
             on how to do it. Ensure that when generating the key
             <b>the trading functions are disbaled</b>.
           </p>
+          <h2>Disclaimer</h2>
+          <p>
+            This project is primarily for my personal usage and a decision to
+            open source it to help the investing community better leverage
+            binance. All views and findings presented in my code or repository
+            are my own and do not represent the opinions of any entity
+            whatsoever with which I have been, am now, or will be affiliated.
+            All material provided are for general information purposes only and
+            do not constitute accounting, legal, tax, or other professional
+            advice. Visitors should not act upon the content or information
+            found here without first seeking appropriate advice from an
+            accountant, financial planner, lawyer or other professional. Usage
+            of any material contained within this repository constitutes an
+            explicit understanding and acceptance of the terms of this
+            disclaimer.
+          </p>
         </div>
       </div>
       <div class="row justify-content-center">
-        <div class="col-sm-2 mb-5 ">
+        <div class="col-sm-4 mb-5 ">
           <div class="text-center">
             <button class="btn btn-dark btn-block" @click.prevent="gotoHome()">
-              I understand the limitations
+              I have read and understood
             </button>
           </div>
         </div>
