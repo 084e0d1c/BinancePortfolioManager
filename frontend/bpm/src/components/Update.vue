@@ -3,12 +3,17 @@
   <div>
     <loading :active.sync="loading"></loading>
     <div class="container-fluid" style="margin-top: 25px">
+      <logo headerText="Update your traded pairs"></logo>
       <div class="row justify-content-center">
-        <div class="col-sm-6 jumbotron" id="header" style="background: #42b983">
-          <h1 class="display-5" style="color: black">
-            Update your traded pairs
-          </h1>
-        </div>
+        <p class="lead pt-3" style="color: black">
+          Click
+          <a
+            @click="$router.push('/')"
+            style="text-decoration: underline; color: #42b983"
+            >here</a
+          >
+          to return to home
+        </p>
       </div>
       <div class="row justify-content-center" id="signUp">
         <div class="col-sm-6">
@@ -57,6 +62,7 @@
 import axios from "axios";
 // Import component
 import Loading from "vue-loading-overlay";
+import Logo from "./Logo";
 import Multiselect from "vue-multiselect";
 // Import stylesheet
 import "vue-loading-overlay/dist/vue-loading.css";
@@ -76,6 +82,7 @@ export default {
   components: {
     Loading,
     Multiselect,
+    Logo,
   },
 
   methods: {
@@ -94,6 +101,16 @@ export default {
     },
     updateTradedPairs() {
       this.loading = true;
+      if (this.uid == "") {
+        alert("Please enter your UID");
+        this.loading = false;
+        return;
+      }
+      if (this.userTraded.length == 0) {
+        alert("Please ensure you have indicated your pairs traded");
+        this.loading = false;
+        return;
+      }
       var json_payload = {
         uid: this.uid,
         pairs: this.userTraded,
@@ -110,12 +127,14 @@ export default {
       });
     },
     getTradedPairs() {
+      this.loading = true;
       var json_payload = {
         uid: this.uid,
         action: "READ",
       };
       axios.post(CRUD_TRADED_PAIRS, json_payload).then((res) => {
         this.userTraded = eval(res.data["Item"]["pairs"]);
+        this.loading = false;
       });
     },
   },

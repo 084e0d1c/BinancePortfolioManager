@@ -2,34 +2,33 @@
   <div>
     <loading :active.sync="loading"></loading>
     <div class="container-fluid" style="margin-top: 25px">
+      <logo headerText="Binance Portfolio Manager"> </logo>
+
       <div class="row justify-content-center">
-        <div class="col-sm-6 jumbotron" id="header" style="background: #42b983">
-          <h1 class="display-5" style="color: black">
-            Bianance Portfolio Manager
-          </h1>
-          <p class="lead" style="color: black">
-            In no way or form is this website related to the official binance
-            platform. Please read this
+        <div class="col-sm-6 py-3">
+          <h2>Welcome!</h2>
+          <p class="lead">
+            If you are new, Please read this
             <a
               @click="$router.push('/about')"
-              style="text-decoration: underline; color: black"
+              style="text-decoration: underline; color: #42b983"
               >link</a
             >
             before proceeding to use the site.
           </p>
-          <p class="lead" style="color: black">
+          <p class="lead">
             Don't have an account? Click
             <a
               @click="$router.push('/signup')"
-              style="text-decoration: underline; color: black"
+              style="text-decoration: underline; color: #42b983"
               >here</a
             >
           </p>
-          <p class="lead" style="color: black">
+          <p class="lead">
             Updating traded pairs? Click
             <a
               @click="$router.push('/update')"
-              style="text-decoration: underline; color: black"
+              style="text-decoration: underline; color: #42b983"
               >here</a
             >
           </p>
@@ -39,7 +38,7 @@
 
     <div class="container-fluid">
       <div class="row justify-content-center" id="logIn">
-        <div class="col-sm-5">
+        <div class="col-sm-6">
           <div class="form-group">
             <label>UID</label>
             <input
@@ -81,7 +80,7 @@
       </div>
       <br />
       <div class="row justify-content-center">
-        <div class="col-sm-2 mt-2 ">
+        <div class="col-sm-2 mt-1 mb-5">
           <div class="text-center">
             <button
               class="btn btn-dark btn-block"
@@ -92,6 +91,16 @@
           </div>
         </div>
       </div>
+      <div class="row justify-content-center text-center mb-5">
+        <p>
+          © 2020 - Brandon Tan
+          <a
+            href="https://github.com/brandontjd/BinancePortfolioManager"
+            style="color: #42b983"
+            ><img src="../assets/github.png" width="5%" style="min-width:50px"
+          /></a>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -101,6 +110,7 @@ import Loading from "vue-loading-overlay";
 import axios from "axios";
 import Multiselect from "vue-multiselect";
 import "vue-loading-overlay/dist/vue-loading.css";
+import Logo from "./Logo";
 import {
   DEV,
   GET_ALL_TRADES,
@@ -114,6 +124,7 @@ export default {
   components: {
     Loading,
     Multiselect,
+    Logo,
   },
   data() {
     return {
@@ -168,4 +179,4 @@ export default {
   },
 };
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style scoped src="vue-multiselect/dist/vue-multiselect.min.css"></style>
