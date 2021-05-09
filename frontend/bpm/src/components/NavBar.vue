@@ -1,8 +1,14 @@
 <template>
   <nav
     class="navbar navbar-expand-lg"
-    style="background: #42b983; color: black; font-size: 25px"
+    style="background: #4cba88; color: black; font-size: 25px"
   >
+    <img
+      class="pr-2"
+      src="../assets/logo.svg"
+      width="4%"
+      style="min-width:25px"
+    />
     <div class="navbar-brand">Binance Portfolio Manager</div>
 
     <div style="padding-top: 10px;">
@@ -18,6 +24,13 @@
           >
         </li>
       </ul>
+    </div>
+    <div class="justify-content-right">
+      <li class="nav-item">
+        <button type="button" class="btn btn-dark" @click="logOut()">
+          Logout
+        </button>
+      </li>
     </div>
   </nav>
 </template>
@@ -49,6 +62,9 @@ export default {
       }
       return this.optimise_color;
     },
+    logOut() {
+      this.$store.color("reset_state")
+    }
   },
 };
 </script>

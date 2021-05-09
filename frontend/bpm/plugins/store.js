@@ -5,6 +5,28 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+function defaultState() {
+  return {
+    api_details: {
+      key: "#",
+      secret: "#",
+    },
+    assets: {},
+    order_history: [],
+    computed_assets: "",
+    pieChartData: "",
+    max_weight: "",
+    coin_with_max_weight: "",
+    portfolio_value: "",
+    pnlChartDataCategories: "",
+    pnlChartDataDataSet1: "",
+    pnlChartDataDataSet2: "",
+    most_profitable: "",
+    least_profitable: "",
+    total_pnl: "",
+    fusionTable: "",
+  };
+}
 export default new Vuex.Store({
   state: {
     api_details: {
@@ -56,9 +78,15 @@ export default new Vuex.Store({
     change_historical_position_data(state, payload) {
       state.fusionTable = payload;
     },
-    change_portfolio_accessed_before(state,payload) {
+    change_portfolio_accessed_before(state, payload) {
       state.portfolio_accessed_before = payload;
-    }
+    },
+    reset_state(state) {
+      const d = defaultState();
+      Object.keys(d).forEach((key) => {
+        state[key] = d[key];
+      });
+    },
   },
   actions: {},
 });
