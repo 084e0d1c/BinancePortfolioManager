@@ -54,6 +54,10 @@
               Your portfolio holdings are constructed using your historical spot
               account trades plus value of USDT / BUSD / DAI in your spot
               wallet.
+              <b
+                >If they are in flexible or locked savings/staking, it will not
+                be reflected.</b
+              >
             </li>
             <li>
               Referral, staking and external deposits profits and values will
