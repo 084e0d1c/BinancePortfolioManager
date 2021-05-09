@@ -63,8 +63,9 @@ export default {
       return this.optimise_color;
     },
     logOut() {
-      this.$store.color("reset_state")
-    }
+      this.$store.commit("reset_state");
+      this.$router.push("/");
+    },
   },
 };
 </script>
