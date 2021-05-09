@@ -9,6 +9,7 @@ import pandas as pd
 
 def get_all_trades(event, context):
 
+    STABLE_COINS = ['USDT','USDC','PAX','BUSD','TUSD']
     # Retrive traded pairs from events
     json_payload = json.loads(event['body'])['data']
     binance_api_key = json_payload['API_KEY']
@@ -97,10 +98,11 @@ def get_all_trades(event, context):
     for k in qty_dict:
         assets[k] = [qty_dict[k], price_dict[k]]
 
-    # Step 4: Get any USDT position
-    usdt_obj = binance_client.get_asset_balance("USDT")
-    usdt_position = float(usdt_obj['free']) + float(usdt_obj['locked'])
-    assets["USDT"] = [usdt_position, 1]
+    # Step 4: Get any stable coins position
+    for stable_coin in STABLE_COINS:
+        stable_coin_obj = binance_client.get_asset_balance(stable_coin)
+        stable_coin_position = float(stable_coin_obj['free']) + float(stable_coin_obj['locked'])
+        assets["USDT"] = [stable_coin_position, 1]
 
     frontend_formatted_assets = []
     for coin in assets:
@@ -108,8 +110,8 @@ def get_all_trades(event, context):
         temp['Coin'] = coin
         temp['Quantity'] = assets[coin][0]
         temp['Price'] = assets[coin][1]
-        temp['Value'] = float(temp['Price']) * float(temp['Quantity'])
-        if temp['Value'] > 1.0:
+        temp['Value'] = round(float(temp['Price']) * float(temp['Quantity']),3)
+        if temp['Value'] > 5.0:
             frontend_formatted_assets.append(temp)
 
     response = {
