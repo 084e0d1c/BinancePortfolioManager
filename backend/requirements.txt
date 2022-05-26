@@ -36,7 +36,7 @@ s3transfer==0.4.2
 scipy==1.6.2
 service-identity==18.1.0
 six==1.15.0
-Twisted==21.2.0
+Twisted==22.4.0
 txaio==21.2.1
 tzlocal==2.1
 ujson==4.0.2
