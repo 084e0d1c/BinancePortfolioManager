@@ -4,7 +4,7 @@ Automat==20.2.0
 binance==0.3
 boto3==1.17.57
 botocore==1.20.57
-certifi==2020.12.5
+certifi==2022.12.7
 cffi==1.14.5
 chardet==4.0.0
 click==7.1.2
